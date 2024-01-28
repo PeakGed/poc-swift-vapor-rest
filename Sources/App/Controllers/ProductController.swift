@@ -6,7 +6,8 @@
 //
 
 import Vapor
-  
+import Fluent
+
 class ProductController: RouteCollection {
 
     func boot(routes: RoutesBuilder) throws {
@@ -23,51 +24,24 @@ class ProductController: RouteCollection {
     }
     
     // GET /products
-    func all(req: Request) async throws -> Products {
+    func all(req: Request) async throws -> [ProductScheme] {
         do {
             let query = try req.query.decode(QueryProduct.self)
             
             if let name = query.name {
                 // return with filter by name
-                let foundProducts = Products.Stub.applDevices.filter(withName: name)
-                return foundProducts
+                return try await ProductScheme.query(on: req.db)
+                    .filter(\.$name =~ name)
+                    .all()
             }
             // return all product
-            return Products.Stub.applDevices
+            return try await ProductScheme.query(on: req.db).all()
         } catch {
-            // return all product
-            return Products.Stub.applDevices
+            return try await ProductScheme.query(on: req.db).all()
         }
     }
     
     // POST /products
-//    func create(req: Request) async throws -> Product {
-//        // try to decode param by CreateContent
-//        let content = try req.content.decode(CreateProduct.self)
-//        
-//        // validate
-//        try CreateProduct.validate(content: req)
-//        
-//        // load from local
-//        var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-//                                                          type: Products.self)
-//        let lastedID = loadProducts.latedID()
-//                
-//        // new product
-//        let newProduct = Product(id: lastedID,
-//                                 name: content.name,
-//                                 price: content.price,
-//                                 description: content.description,
-//                                 unit: content.unit)
-//        loadProducts.append(newProduct)
-//        
-//        // save to datastore
-//        try LocalDatastore.shared.save(fileName: "products",
-//                                       data: loadProducts)
-//        
-//        return newProduct
-//    }
-    
     func create(req: Request) async throws -> ProductScheme {
         // try to decode param by CreateContent
         let content = try req.content.decode(CreateProduct.self)
@@ -82,43 +56,26 @@ class ProductController: RouteCollection {
         try await newProduct.create(on: req.db)
         
         return newProduct
-        
-        // load from local
-//        var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-//                                                          type: Products.self)
-//        let lastedID = loadProducts.latedID()
-//                
-//        // new product
-//        let newProduct = Product(id: lastedID,
-//                                 name: content.name,
-//                                 price: content.price,
-//                                 description: content.description,
-//                                 unit: content.unit)
-//        loadProducts.append(newProduct)
-        
-        // save to datastore
-//        try LocalDatastore.shared.save(fileName: "products",
-//                                       data: loadProducts)
-//        
-//        return newProduct
     }
     
     // GET /products/:id
-    func getByID(req: Request) async throws -> Product {
+    func getByID(req: Request) async throws -> ProductScheme {
         guard
-            let idRaw = req.parameters.get("id"),
-            let id = Int(idRaw) 
+            let id = req.parameters.get("id"),
+            let uuid = UUID(id)
         else { throw Abort(.badRequest) }
         
-        // load from local
-        let loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
-        
-        guard 
-            let foundProduct = loadProducts.find(id: id)
-        else { throw Abort(.notFound) }
-        
-        return foundProduct
+        do {
+            guard 
+                let product = try await ProductScheme.query(on: req.db)
+                .filter(\.$id == uuid)
+                .first() 
+            else { throw Abort(.notFound) }
+            
+            return product
+        } catch {
+            throw Abort(.notFound)
+        }
     }
     
     // PUT /products/:id
