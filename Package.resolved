@@ -19,12 +19,57 @@
       }
     },
     {
+      "identity" : "bson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/BSON.git",
+      "state" : {
+        "revision" : "c29936981d39667429d4e0ec03aa8d6a722ea36a",
+        "version" : "7.0.31"
+      }
+    },
+    {
       "identity" : "console-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/console-kit.git",
       "state" : {
         "revision" : "a31f44ebfbd15a2cc0fda705279676773ac16355",
         "version" : "4.14.1"
+      }
+    },
+    {
+      "identity" : "dnsclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/DNSClient.git",
+      "state" : {
+        "revision" : "8a7b1be0208e6e9d1d9e0a07713e0c0ebd7a2010",
+        "version" : "2.3.0"
+      }
+    },
+    {
+      "identity" : "fluent",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent.git",
+      "state" : {
+        "revision" : "a586a5d4164f23a0ee4e02e1f467b9bbef0c9f1c",
+        "version" : "4.9.0"
+      }
+    },
+    {
+      "identity" : "fluent-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent-kit.git",
+      "state" : {
+        "revision" : "6cef8533c9ab87865de58fa3c6e6317e3e09857a",
+        "version" : "1.45.1"
+      }
+    },
+    {
+      "identity" : "fluent-mongo-driver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/fluent-mongo-driver.git",
+      "state" : {
+        "revision" : "a4237b99720d2a728178bc9f4c4a0d11d309031e",
+        "version" : "1.3.1"
       }
     },
     {
@@ -64,6 +109,15 @@
       }
     },
     {
+      "identity" : "mongokitten",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orlandos-nl/MongoKitten.git",
+      "state" : {
+        "revision" : "a29b84eb12f05cec9ee26f78770dcec7e63a6771",
+        "version" : "6.7.14"
+      }
+    },
+    {
       "identity" : "multipart-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/multipart-kit.git",
@@ -79,6 +133,15 @@
       "state" : {
         "revision" : "2a92a7eac411a82fb3a03731be5e76773ebe1b3e",
         "version" : "4.9.0"
+      }
+    },
+    {
+      "identity" : "sql-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/sql-kit.git",
+      "state" : {
+        "revision" : "b2f128cb62a3abfbb1e3b2893ff3ee69e70f4f0f",
+        "version" : "3.28.0"
       }
     },
     {
