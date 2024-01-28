@@ -25,7 +25,8 @@ func routes(_ app: Application) throws {
     //try app.register(collection: ProductController())
     
     // required auth
-    let protected = app.grouped(UserAuthenticator()).grouped(User.guardMiddleware())
+    //let protected = app.grouped(UserAuthenticator()).grouped(User.guardMiddleware())
+    let protected = app.grouped(UserAuthenticator()).grouped(UserJWTPayload.guardMiddleware())
     try protected.register(collection: ProductController())
     
     // init stub datasource
