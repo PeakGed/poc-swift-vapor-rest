@@ -1,6 +1,8 @@
 import Vapor
 import JWT
 import Leaf
+import Fluent
+import FluentMongoDriver
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -35,6 +37,9 @@ public func configure(_ app: Application) async throws {
         break
     }
     
+    try app.databases.use(.mongo(connectionString: getMongoDBURLPath()),
+                          as: .mongo)
+    
     app.jwt.signers.use(.hs256(key: getJWTKey()))
     app.views.use(.leaf)
     
@@ -43,9 +48,18 @@ public func configure(_ app: Application) async throws {
 
     // register routes
     try routes(app)
+    
+    // Configure migrations
+    //app.migrations.add(ProductScheme())
 }
 
 private func getJWTKey() -> String {
     let _defaultKey = "Ddk_JfGFRFde7eOW71DX8-0RnAvN1741rFme3ESBE2A="
     return Environment.get("JWT_KEY") ?? _defaultKey
+}
+
+//"mongodb://username:password@host:port/database"
+private func getMongoDBURLPath() -> String {
+    "mongodb://localhost:27017/MyDB"
+    //"mongodb://host.docker.internal:27017/MyDB"
 }

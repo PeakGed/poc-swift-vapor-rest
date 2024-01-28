@@ -41,31 +41,66 @@ class ProductController: RouteCollection {
     }
     
     // POST /products
-    func create(req: Request) async throws -> Product {
+//    func create(req: Request) async throws -> Product {
+//        // try to decode param by CreateContent
+//        let content = try req.content.decode(CreateProduct.self)
+//        
+//        // validate
+//        try CreateProduct.validate(content: req)
+//        
+//        // load from local
+//        var loadProducts = try LocalDatastore.shared.load(fileName: "products",
+//                                                          type: Products.self)
+//        let lastedID = loadProducts.latedID()
+//                
+//        // new product
+//        let newProduct = Product(id: lastedID,
+//                                 name: content.name,
+//                                 price: content.price,
+//                                 description: content.description,
+//                                 unit: content.unit)
+//        loadProducts.append(newProduct)
+//        
+//        // save to datastore
+//        try LocalDatastore.shared.save(fileName: "products",
+//                                       data: loadProducts)
+//        
+//        return newProduct
+//    }
+    
+    func create(req: Request) async throws -> ProductScheme {
         // try to decode param by CreateContent
         let content = try req.content.decode(CreateProduct.self)
         
         // validate
         try CreateProduct.validate(content: req)
         
-        // load from local
-        var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
-        let lastedID = loadProducts.latedID()
-                
-        // new product
-        let newProduct = Product(id: lastedID,
-                                 name: content.name,
-                                 price: content.price,
-                                 description: content.description,
-                                 unit: content.unit)
-        loadProducts.append(newProduct)
-        
-        // save to datastore
-        try LocalDatastore.shared.save(fileName: "products",
-                                       data: loadProducts)
+        let newProduct = ProductScheme(name: content.name,
+                                       price: content.price,
+                                       description: content.description,
+                                       unit: content.unit)
+        try await newProduct.create(on: req.db)
         
         return newProduct
+        
+        // load from local
+//        var loadProducts = try LocalDatastore.shared.load(fileName: "products",
+//                                                          type: Products.self)
+//        let lastedID = loadProducts.latedID()
+//                
+//        // new product
+//        let newProduct = Product(id: lastedID,
+//                                 name: content.name,
+//                                 price: content.price,
+//                                 description: content.description,
+//                                 unit: content.unit)
+//        loadProducts.append(newProduct)
+        
+        // save to datastore
+//        try LocalDatastore.shared.save(fileName: "products",
+//                                       data: loadProducts)
+//        
+//        return newProduct
     }
     
     // GET /products/:id
