@@ -18,17 +18,11 @@ final class ProductCategory: Model, Content {
     @Field(key: "name")
     var name: String
     
-    // Reflecting an array of product IDs
-    @Field(key: "product_ids")
-    var productIds: [UUID]
-    
     init() { }
 
     init(id: UUID? = nil, 
-         name: String,
-         productIds: [UUID] = []) {
+         name: String) {
         self.id = id
         self.name = name
-        self.productIds = productIds
     }
 }
