@@ -9,18 +9,17 @@ import Foundation
 import Vapor
 import Fluent
 
-class ProductSchema {
-
-    let schema: String = "Products"
+class ProductCategorySchema {
+    let schema: String = "ProductCategories"
     
     func createBuilder(req: Request) -> SchemaBuilder {
         req.db.schema(schema)
             .id()
             .field("name", .string, .required)
-            .field("price", .double, .required)
-            .field("description", .string)
-            .field("unit", .string, .required)
+            .field("product_ids", .array(of: .uuid))
             .unique(on: "name")
     }
-    
 }
+
+
+
