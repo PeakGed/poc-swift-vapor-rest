@@ -24,32 +24,32 @@ class ProductController: RouteCollection {
     }
     
     // GET /products
-    func all(req: Request) async throws -> [ProductScheme] {
+    func all(req: Request) async throws -> [Product] {
         do {
             let query = try req.query.decode(QueryProduct.self)
             
             if let name = query.name {
                 // return with filter by name
-                return try await ProductScheme.query(on: req.db)
+                return try await Product.query(on: req.db)
                     .filter(\.$name =~ name)
                     .all()
             }
             // return all product
-            return try await ProductScheme.query(on: req.db).all()
+            return try await Product.query(on: req.db).all()
         } catch {
-            return try await ProductScheme.query(on: req.db).all()
+            return try await Product.query(on: req.db).all()
         }
     }
     
     // POST /products
-    func create(req: Request) async throws -> ProductScheme {
+    func create(req: Request) async throws -> Product {
         // try to decode param by CreateContent
         let content = try req.content.decode(CreateProduct.self)
         
         // validate
         try CreateProduct.validate(content: req)
         
-        let newProduct = ProductScheme(name: content.name,
+        let newProduct = Product(name: content.name,
                                        price: content.price,
                                        description: content.description,
                                        unit: content.unit)
@@ -59,7 +59,7 @@ class ProductController: RouteCollection {
     }
     
     // GET /products/:id
-    func getByID(req: Request) async throws -> ProductScheme {
+    func getByID(req: Request) async throws -> Product {
         guard
             let id = req.parameters.get("id"),
             let uuid = UUID(id)
@@ -67,7 +67,7 @@ class ProductController: RouteCollection {
         
         do {
             guard
-                let product = try await ProductScheme.query(on: req.db)
+                let product = try await Product.query(on: req.db)
                 .filter(\.$id == uuid)
                 .first()
             else { throw Abort(.notFound) }
@@ -79,7 +79,7 @@ class ProductController: RouteCollection {
     }
     
     // PUT /products/:id
-    func update(req: Request) async throws -> ProductScheme {
+    func update(req: Request) async throws -> Product {
         guard
             let id = req.parameters.get("id"),
             let uuid = UUID(id)
@@ -135,8 +135,8 @@ private extension ProductController {
     // Helper function to update product fields in the database
     func updateProductFieldsBuilder(uuid: UUID,
                                     content: UpdateProduct,
-                                    db: Database) -> QueryBuilder<ProductScheme> {
-        let updateBuilder = ProductScheme.query(on: db).filter(\.$id == uuid)
+                                    db: Database) -> QueryBuilder<Product> {
+        let updateBuilder = Product.query(on: db).filter(\.$id == uuid)
         
         if let name = content.name {
             updateBuilder.set(\.$name, 
@@ -158,8 +158,8 @@ private extension ProductController {
     }
     
     func getByIDBuilder(uuid: UUID,
-                        db: Database) -> QueryBuilder<ProductScheme> {
-        return ProductScheme.query(on: db).filter(\.$id == uuid)
+                        db: Database) -> QueryBuilder<Product> {
+        return Product.query(on: db).filter(\.$id == uuid)
     }
 }
 

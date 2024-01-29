@@ -23,25 +23,25 @@ class LocalProductController: RouteCollection {
     }
     
     // GET /products
-    func all(req: Request) async throws -> Products {
+    func all(req: Request) async throws -> LocalProducts {
         do {
             let query = try req.query.decode(QueryProduct.self)
             
             if let name = query.name {
                 // return with filter by name
-                let foundProducts = Products.Stub.applDevices.filter(withName: name)
+                let foundProducts = LocalProducts.Stub.applDevices.filter(withName: name)
                 return foundProducts
             }
             // return all product
-            return Products.Stub.applDevices
+            return LocalProducts.Stub.applDevices
         } catch {
             // return all product
-            return Products.Stub.applDevices
+            return LocalProducts.Stub.applDevices
         }
     }
     
     // POST /products
-    func create(req: Request) async throws -> Product {
+    func create(req: Request) async throws -> LocalProduct {
         // try to decode param by CreateContent
         let content = try req.content.decode(CreateProduct.self)
         
@@ -50,11 +50,11 @@ class LocalProductController: RouteCollection {
         
         // load from local
         var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
+                                                          type: LocalProducts.self)
         let lastedID = loadProducts.latedID()
                 
         // new product
-        let newProduct = Product(id: lastedID,
+        let newProduct = LocalProduct(id: lastedID,
                                  name: content.name,
                                  price: content.price,
                                  description: content.description,
@@ -69,7 +69,7 @@ class LocalProductController: RouteCollection {
     }
     
     // GET /products/:id
-    func getByID(req: Request) async throws -> Product {
+    func getByID(req: Request) async throws -> LocalProduct {
         guard
             let idRaw = req.parameters.get("id"),
             let id = Int(idRaw) 
@@ -77,7 +77,7 @@ class LocalProductController: RouteCollection {
         
         // load from local
         let loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
+                                                          type: LocalProducts.self)
         
         guard 
             let foundProduct = loadProducts.find(id: id)
@@ -87,7 +87,7 @@ class LocalProductController: RouteCollection {
     }
     
     // PUT /products/:id
-    func update(req: Request) async throws -> Product {
+    func update(req: Request) async throws -> LocalProduct {
         guard
             let idRaw = req.parameters.get("id"),
             let id = Int(idRaw)
@@ -101,13 +101,13 @@ class LocalProductController: RouteCollection {
         
         // load from local
         var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
+                                                          type: LocalProducts.self)
         
         guard
             let foundProduct = loadProducts.find(id: id)
         else { throw Abort(.notFound) }
         
-        let modifyProduct = Product(id: id,
+        let modifyProduct = LocalProduct(id: id,
                                     name: content.name ?? foundProduct.name,
                                     price: content.price ?? foundProduct.price,
                                     description: content.description ?? foundProduct.description,
@@ -131,7 +131,7 @@ class LocalProductController: RouteCollection {
         
         // load from local
         var loadProducts = try LocalDatastore.shared.load(fileName: "products",
-                                                          type: Products.self)
+                                                          type: LocalProducts.self)
         
         guard
             let _ = loadProducts.find(id: id)

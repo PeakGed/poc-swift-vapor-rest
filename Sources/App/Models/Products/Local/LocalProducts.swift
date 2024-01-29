@@ -8,18 +8,18 @@
 import Foundation
 import Vapor
 
-struct Products: Codable {
-    var lists: [Product]
+struct LocalProducts: Codable {
+    var lists: [LocalProduct]
     
-    init(lists: [Product]) {
+    init(lists: [LocalProduct]) {
         self.lists = lists
     }
 
     init(from decoder: Decoder) throws {
-        var lists = [Product]()
+        var lists = [LocalProduct]()
         var container = try decoder.unkeyedContainer()
         while !container.isAtEnd {
-            let product = try container.decode(Product.self)
+            let product = try container.decode(LocalProduct.self)
             lists.append(product)
         }
         self.lists = lists
@@ -32,10 +32,10 @@ struct Products: Codable {
         }
     }
     
-    func filter(withName: String) -> Products {
+    func filter(withName: String) -> LocalProducts {
         let q = withName.lowercased()
         let result = lists.filter { $0.name.lowercased().contains(q) }
-        return Products(lists: result)
+        return LocalProducts(lists: result)
     }
     
     func latedID() -> Int {
@@ -43,15 +43,15 @@ struct Products: Codable {
         return (result.first?.id ?? 0) + 1
     }
     
-    func find(id: Int) -> Product? {
+    func find(id: Int) -> LocalProduct? {
         return lists.first { $0.id == id }
     }
     
-    mutating func append(_ product: Product) {
+    mutating func append(_ product: LocalProduct) {
         lists.append(product)
     }
     
-    mutating func replace(_ product: Product) {
+    mutating func replace(_ product: LocalProduct) {
         guard 
             let index = lists.firstIndex(where: { $0.id == product.id })
         else { return }
@@ -68,7 +68,7 @@ struct Products: Codable {
     }
 }
 
-extension Products: AsyncResponseEncodable {
+extension LocalProducts: AsyncResponseEncodable {
     func encodeResponse(for request: Request) async throws -> Response {
         let response = Response()
         try response.content.encode(self,
@@ -77,22 +77,22 @@ extension Products: AsyncResponseEncodable {
     }
 }
 
-extension Products: Content {}
+extension LocalProducts: Content {}
 
-extension Products {
+extension LocalProducts {
     struct Stub {
-        static var applDevices: Products {
-            return Products(lists: [
-                Product.Stub.ip7,
-                Product.Stub.ip7p,
-                Product.Stub.ip8,
-                Product.Stub.ip8p,
-                Product.Stub.ipx,
-                Product.Stub.ipxs,
-                Product.Stub.ipxsmax,
-                Product.Stub.ipxr,
-                Product.Stub.ip11,
-                Product.Stub.ip11p
+        static var applDevices: LocalProducts {
+            return LocalProducts(lists: [
+                LocalProduct.Stub.ip7,
+                LocalProduct.Stub.ip7p,
+                LocalProduct.Stub.ip8,
+                LocalProduct.Stub.ip8p,
+                LocalProduct.Stub.ipx,
+                LocalProduct.Stub.ipxs,
+                LocalProduct.Stub.ipxsmax,
+                LocalProduct.Stub.ipxr,
+                LocalProduct.Stub.ip11,
+                LocalProduct.Stub.ip11p
             ])
         }
     }

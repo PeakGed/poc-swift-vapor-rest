@@ -21,7 +21,7 @@ final class ProductControllerTests: XCTestCase {
             XCTAssertNotNil(res.body)
             
             // expect result is valid
-            let expected = try res.content.decode([Product].self)
+            let expected = try res.content.decode([LocalProduct].self)
             XCTAssertTrue(expected.count > 0)
         })
     }
@@ -44,7 +44,7 @@ final class ProductControllerTests: XCTestCase {
             XCTAssertNotNil(res.body)
             
             // expect result is valid
-            let expected = try res.content.decode(Product.self)
+            let expected = try res.content.decode(LocalProduct.self)
             XCTAssertEqual(expected.name, "iPhone 15")
             XCTAssertEqual(expected.price, 50000)
             XCTAssertEqual(expected.description, "iPhone 15 128GB")
@@ -63,7 +63,7 @@ final class ProductControllerTests: XCTestCase {
             XCTAssertNotNil(res.body)
             
             // expect result is valid
-            let expected = try res.content.decode(Product.self)
+            let expected = try res.content.decode(LocalProduct.self)
             XCTAssertEqual(expected.id, 1)
         })
     }
@@ -84,7 +84,7 @@ final class ProductControllerTests: XCTestCase {
             XCTAssertNotNil(res.body)
             
             // expect result is valid
-            let expected = try res.content.decode(Product.self)
+            let expected = try res.content.decode(LocalProduct.self)
             XCTAssertEqual(expected.name, "iPhone XXS")
         })
     }
